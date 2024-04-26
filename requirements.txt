@@ -1,0 +1,6 @@
+express
+mongoose
+bcrypt
+axios
+cors
+mongodb
