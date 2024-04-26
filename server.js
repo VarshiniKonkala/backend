@@ -6,12 +6,13 @@ const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const app = express(); 
 app.use(cors()); 
 const PORT = process.env.PORT || 5000; 
- 
-await mongoose 
-  .connect("mongodb+srv://varshini:Varshini2003@cluster0.st30aiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{ bufferCommands: false, useNewUrlParser: true, useUnifiedTopology: true }) 
-  .then(() => { console.log("Connected to MongoDB Successfully"); }) 
-  .catch((err) => { console.log(err); });
- 
+const fun=async()=>{ 
+ await mongoose 
+   .connect("mongodb+srv://varshini:Varshini2003@cluster0.st30aiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{ bufferCommands: false, useNewUrlParser: true, useUnifiedTopology: true }) 
+   .then(() => { console.log("Connected to MongoDB Successfully"); }) 
+   .catch((err) => { console.log(err); });
+}
+fun();
 const UserSchema = new mongoose.Schema({ 
   username: String, 
   password: String, 
