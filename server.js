@@ -3,14 +3,15 @@ const axios = require('axios');
 const cors = require('cors');  
 const mongoose = require('mongoose'); 
 const bcrypt = require('bcrypt'); // Import bcrypt for password hashing 
-const app = express(); 
+const app = express();
 app.use(cors()); 
 const PORT = process.env.PORT || 5000; 
+let l,e;
 const fun=async()=>{ 
  await mongoose 
    .connect("mongodb+srv://varshini:Varshini2003@cluster0.st30aiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{ bufferCommands: false, useNewUrlParser: true, useUnifiedTopology: true }) 
-   .then(() => { console.log("Connected to MongoDB Successfully"); }) 
-   .catch((err) => { console.log(err); });
+   .then(() => { console.log("Connected to MongoDB Successfully");l="Connected to MongoDB Successfully"}) 
+   .catch((err) => { console.log(err);e=err.message });
 }
 fun();
 const UserSchema = new mongoose.Schema({ 
@@ -22,9 +23,13 @@ const UserSchema = new mongoose.Schema({
 const User = new mongoose.model("User", UserSchema); 
  
 app.use(express.json()); // Parse JSON bodies 
- 
+app.get('/',(req,res)=>{
+  if(l!=undefined)
+  return res.send(l);
+  res.send(e);
+})
 // Fetch news articles 
-app.get('/api/news', async (req, res) => { 
+app.get('/news', async (req, res) => { 
   try { 
     const { country } = req.query;  
     const response = await axios.get('https://newsapi.org/v2/top-headlines', { 
@@ -37,12 +42,12 @@ app.get('/api/news', async (req, res) => {
     res.json(response.data.articles); 
   } catch (error) { 
     console.error('Error fetching news:', error); 
-    res.status(500).json({ error: 'Internal Server Error' }); 
+    res.status(500).json({ error: error.message }); 
   } 
 }); 
  
 // User login 
-app.post('/api/login', async (req, res) => { 
+app.post('/login', async (req, res) => { 
   try { 
     const user = await User.findOne({ username: req.body.username }); 
     if (!user) { 
@@ -55,12 +60,12 @@ app.post('/api/login', async (req, res) => {
     res.json({ message: 'Login successful', user }); 
   } catch (error) { 
     console.error('Error during login:', error); 
-    res.status(500).json({ error: 'Internal Server Error' }); 
+    res.status(500).json({ error: error.message }); 
   } 
 }); 
  
 // User signup 
-app.post('/api/signup', async (req, res) => { 
+app.post('/signup', async (req, res) => { 
   try { 
     const ue=/^[a-zA-Z]+[a-zA-Z0-9]*/; 
     if(!ue.test(req.body.username)) 
@@ -79,11 +84,11 @@ app.post('/api/signup', async (req, res) => {
     res.send(result) 
   } catch (error) { 
     console.error('Error during signup:', error); 
-    res.status(500).json({ error: 'Internal Server Error' }); 
+    res.status(500).json({ error: error.message }); 
   } 
 }); 
  
-app.post('/api/addRecentlyViewed', async (req, res) => { 
+app.post('/addRecentlyViewed', async (req, res) => { 
   try { 
     const { userId, article } = req.body; 
     //console.log(article); 
@@ -113,10 +118,10 @@ app.post('/api/addRecentlyViewed', async (req, res) => {
     } 
   } catch (error) { 
     console.error('Error adding recently viewed article:', error); 
-    res.status(500).json({ error: 'Internal Server Error' }); 
+    res.status(500).json({ error: error.message }); 
   } 
 }); 
-app.get('/api/recentlyViewedArticles/:username', async (req, res) => { 
+app.get('/recentlyViewedArticles/:username', async (req, res) => { 
   try { 
     const user = await User.findOne({username:req.params.username}); 
     if (!user) { 
@@ -125,7 +130,7 @@ app.get('/api/recentlyViewedArticles/:username', async (req, res) => {
     res.json({ recentlyViewedArticles: user.recentlyViewedArticles }); 
   } catch (error) { 
     console.error('Error fetching recently viewed articles:', error); 
-    res.status(500).json({ error: 'Internal Server Error' }); 
+    res.status(500).json({ error: error.message }); 
   } 
 }); 
 app.listen(PORT, () => { 
