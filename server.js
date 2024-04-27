@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 let l,e;
 const fun=async()=>{ 
  await mongoose 
-   .connect("mongodb+srv://varshini:Varshini2003@cluster0.st30aiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{ bufferCommands: false, useNewUrlParser: true, useUnifiedTopology: true }) 
+   .connect("mongodb+srv://user:NewsForU@cluster0.st30aiy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",{ bufferCommands: false, useNewUrlParser: true, useUnifiedTopology: true }) 
    .then(() => { console.log("Connected to MongoDB Successfully");l="Connected to MongoDB Successfully"}) 
    .catch((err) => { console.log(err);e=err.message });
 }
